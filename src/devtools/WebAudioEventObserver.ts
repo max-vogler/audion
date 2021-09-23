@@ -1,8 +1,5 @@
-/// <reference path="../chrome/DebuggerWebAudioDomain.js" />
-/// <reference path="Types.js" />
-
 import {chrome} from '../chrome';
-import {ChromeDebuggerWebAudioDomain} from '../chrome/DebuggerWebAudioDomain';
+import {Methods} from '../chrome/DebuggerWebAudioDomain';
 import {Observer} from '../utils/Observer';
 
 const debuggerVersion = '1.3';
@@ -10,10 +7,9 @@ const {tabId} = chrome.devtools.inspectedWindow;
 
 /**
  * @memberof Audion
- * @extends {Observer<Audion.WebAudioEvent>}
  * @alias WebAudioEventObserver
  */
-export class WebAudioEventObserver extends Observer {
+export class WebAudioEventObserver extends Observer<Audion.WebAudioEvent> {
   /**
    * Observe WebAudio events from chrome.debugger.
    */
@@ -29,24 +25,15 @@ export class WebAudioEventObserver extends Observer {
       };
       const onDetach = () => {
         chrome.debugger.attach({tabId}, debuggerVersion, () => {
-          chrome.debugger.sendCommand(
-            {tabId},
-            ChromeDebuggerWebAudioDomain.Methods.enable,
-          );
+          chrome.debugger.sendCommand({tabId}, Methods.enable);
         });
       };
       const onNavigated = () => {
-        chrome.debugger.sendCommand(
-          {tabId},
-          ChromeDebuggerWebAudioDomain.Methods.enable,
-        );
+        chrome.debugger.sendCommand({tabId}, Methods.enable);
       };
 
       chrome.debugger.attach({tabId}, debuggerVersion, () => {
-        chrome.debugger.sendCommand(
-          {tabId},
-          ChromeDebuggerWebAudioDomain.Methods.enable,
-        );
+        chrome.debugger.sendCommand({tabId}, Methods.enable);
       });
       chrome.debugger.onDetach.addListener(onDetach);
       chrome.debugger.onEvent.addListener(onEvent);
@@ -56,10 +43,7 @@ export class WebAudioEventObserver extends Observer {
         chrome.debugger.onDetach.removeListener(onDetach);
         chrome.debugger.onEvent.removeListener(onEvent);
         chrome.devtools.network.onNavigated.removeListener(onNavigated);
-        chrome.debugger.sendCommand(
-          {tabId},
-          ChromeDebuggerWebAudioDomain.Methods.disable,
-        );
+        chrome.debugger.sendCommand({tabId}, Methods.disable);
         chrome.debugger.detach({tabId}, () => {});
       };
     });

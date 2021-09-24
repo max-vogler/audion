@@ -55,7 +55,7 @@
   },
   "scripts": {
     "build:chrome-extension": "node src/build/make-chrome-extension.js",
-    "build:webpack": "webpack --mode production --config src/webpack.config.js --verbose",
+    "build:webpack": "webpack --mode production --config src/webpack.config.js",
     "build:clean": "rimraf build",
     "build": "npm run build:clean && npm run build:webpack && npm run build:chrome-extension",
     "clean": "rimraf build docs src/coverage",
